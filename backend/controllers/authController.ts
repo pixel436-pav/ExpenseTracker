@@ -48,14 +48,29 @@ export const registerUser = async (req: Request, res: Response) => {
 
 };
 
-// export const loginUser = async (req:Request,res:Response) => {
-//   try {
-//     const {email,password} = req.body;
-//     // find user by email 
-//     const user = await User.findOne({email});
-//     if (user && (await user.matchPassword(password)))
-//   } catch (error) {
-    
-//   }
-// }
+export const loginUser = async (req:Request,res:Response) => {
+  try {
+    const {email,password} = req.body;
+    // find user by email 
+    const user = await User.findOne({email});
+    if (user && (await user.matchPassword(password))){
+
+        // above will triger that password matching function that we wrote in mongoose to match the password with the hashed password 
+
+        const token = generateToken(user._id.toString());
+
+        res.json({
+            _id : user._id,
+            name : user.name,
+            email : user.email,
+            token : token
+        });
+
+    }else {
+        res.status(401).json({message: 'Invalid Email or password'})
+    }
+  } catch (error) {
+    res.status(500).json({ message: 'Server error' });
+  }
+}
 
