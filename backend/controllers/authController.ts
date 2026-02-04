@@ -74,3 +74,17 @@ export const loginUser = async (req:Request,res:Response) => {
   }
 }
 
+// GET ME - which will get the current user's profile
+
+export const getMe = async (req:Request,res:Response) => {
+  try {
+    const user = await User.findById((req as any).user.id).select('-password');
+    res.json(user);
+  } catch (error) {
+    
+    res.status(500).json({message:'Server Error'});
+
+  }
+}
+
+
