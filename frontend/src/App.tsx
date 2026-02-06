@@ -1,35 +1,55 @@
-import { useState } from 'react'
-import reactLogo from './assets/react.svg'
-import viteLogo from '/vite.svg'
-import './App.css'
+import { useState, useEffect } from 'react';
+import Login from './pages/Login';
+import Dashboard from './pages/Dasboard.js'
+import { authService } from './services/api.js';
+
+// ⭐ APP COMPONENT:
+// Root component - decides what to show based on auth state
 
 function App() {
-  const [count, setCount] = useState(0)
+  const [isAuthenticated, setIsAuthenticated] = useState(false);
+  const [loading, setLoading] = useState(true);
+
+  // Check if user is logged in when app loads
+  useEffect(() => {
+    const token = authService.getToken();
+    setIsAuthenticated(!!token);  // !! converts to boolean
+    setLoading(false);
+  }, []);
+
+  // !! OPERATOR EXPLAINED:
+  // Converts any value to boolean
+  // !!null = false
+  // !!undefined = false
+  // !!'hello' = true
+  // !!0 = false
+  // !!123 = true
+
+  const handleLogin = () => {
+    setIsAuthenticated(true);
+  };
+
+  // THE FLOW:
+  // 1. User opens app
+  // 2. App component mounts
+  // 3. useEffect runs
+  // 4. Check localStorage for token
+  // 5. If token exists → show Dashboard
+  // 6. If no token → show Login
+
+  if (loading) {
+    return <div>Loading...</div>;
+  }
 
   return (
     <>
-      <div>
-        <a href="https://vite.dev" target="_blank">
-          <img src={viteLogo} className="logo" alt="Vite logo" />
-        </a>
-        <a href="https://react.dev" target="_blank">
-          <img src={reactLogo} className="logo react" alt="React logo" />
-        </a>
-      </div>
-      <h1>Vite + React</h1>
-      <div className="card">
-        <button onClick={() => setCount((count) => count + 1)}>
-          count is {count}
-        </button>
-        <p>
-          Edit <code>src/App.tsx</code> and save to test HMR
-        </p>
-      </div>
-      <p className="read-the-docs">
-        Click on the Vite and React logos to learn more
-      </p>
+      {isAuthenticated ? (
+        <Dashboard />
+      ) : (
+        <Login onLogin={handleLogin} />
+      )}
     </>
-  )
+  );
 }
 
-export default App
+export default App;
