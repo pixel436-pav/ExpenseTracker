@@ -1,6 +1,6 @@
-import { Request, Response } from 'express'
-import mongoose from 'mongoose'
-import Expense from '../models/Expense.js'
+import { Request, Response } from 'express';
+import mongoose from 'mongoose';
+import Expense from '../models/Expense.js';
 
 //Get all expenses
 export const getExpense = async (req: Request, res: Response) => {
