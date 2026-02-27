@@ -8,7 +8,7 @@ interface AuthRequest extends Request {
 
 
 // Middle Ware For the protection ( this requires authentication )
-export const protect = async (  req: AuthRequest,
+export const protect = async (  req: AuthRequest,  
                                 res: Response,
                                 next : NextFunction) => {
                                     let token ;
